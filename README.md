@@ -1,14 +1,15 @@
 # capistrano-ghostinspector
 
-`PRE RELEASE`
+[![Scrutinizer Code Quality](https://www2.scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/badges/quality-score.png?b=master)](https://www2.scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/?branch=master) [![Build Status](https://www2.scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/badges/build.png?b=master)](https://www2.scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/build-status/master)
 
-#### Introduction
-[Ghost Inspector](https://ghostinspector.com/ "Ghost Inspector") is an automated website regression testing tool. This [Capistrano](http://capistranorb.com/ "Capistrano") plugin is a simple, configurable gem that will provide the following features.
+`PRE RELEASE`
 
 #### Requirements
 - capistrano-mutistage
 - Ruby 1.9.4+
 
+#### Introduction
+[Ghost Inspector](https://ghostinspector.com/ "Ghost Inspector") is an automated website regression testing tool. This [Capistrano](http://capistranorb.com/ "Capistrano") plugin is a simple, configurable gem that will provide the following features.
 
 ##### Features
 - Set individual tests/suites to run from command line
