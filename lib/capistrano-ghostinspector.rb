@@ -49,7 +49,7 @@ module Richdynamix
 
                 set :passing, true
 
-                if (rollback == true)
+                if (rollback == false)
                   set :immediate, "&immediate=1"
                 else
                   set :immediate, ""
