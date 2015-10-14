@@ -6,7 +6,7 @@
 
 #### Requirements
 - capistrano-mutistage
-- Ruby 1.9.4+
+- Ruby 2.0.0
 
 #### Introduction
 [Ghost Inspector](https://ghostinspector.com/ "Ghost Inspector") is an automated website regression testing tool. This [Capistrano](http://capistranorb.com/ "Capistrano") plugin is a simple, configurable gem that will provide the following features.
@@ -20,7 +20,7 @@
 #### Installation
 - Download the repo and build the gem - `gem build capistrano-ghostinspector.gemspec`
 - Install the gem - `gem install capistrano-ghostinspector-0.0.1.pre.gem`
-- Include the gem in your Capfile - `gem "capistrano-ghostinspector", '~>0.0.1.pre'`
+- Include the gem in your Gemfile - `gem "capistrano-ghostinspector", '~>0.0.1.pre'`
 - Add `require 'capistrano-ghostinspector'` at the top of your `deploy.rb` file
 
 #### Configuration
@@ -61,6 +61,6 @@ Run a particular suite when deploying to staging -
 `cap staging deploy -s gisuite=aboutpage`
 
 Run a multiple suites when deploying to staging -
-`cap staging deploy -s gisuite=homepage,suite2`
+`cap staging deploy -s gisuite=aboutpage,suite2`
 
 

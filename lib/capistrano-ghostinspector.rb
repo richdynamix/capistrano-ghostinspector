@@ -49,12 +49,18 @@ module Richdynamix
 
                 set :passing, true
 
+                if (rollback == true)
+                  set :immediate, "&immediate=1"
+                else
+                  set :immediate, ""
+                end
+
                 # run each test
                 test_run.each do |test|
 
                   puts "* * * Running Ghost Inspector Test * * *"
 
-                  run_locally %{curl "https://api.ghostinspector.com/v1/tests/#{test}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/"  > gitestresults.json}
+                  run_locally %{curl "https://api.ghostinspector.com/v1/tests/#{test}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}"  > gitestresults.json}
                   results = JSON.parse(File.read("gitestresults.json"))
                   set :passing, results['data']['passing']
                 end
@@ -64,7 +70,7 @@ module Richdynamix
 
                   puts "* * * Running Ghost Inspector Suite * * *"
 
-                  run_locally %{curl "https://api.ghostinspector.com/v1/suites/#{suite}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/" > gitestresults.json}
+                  run_locally %{curl "https://api.ghostinspector.com/v1/suites/#{suite}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}" > gitestresults.json}
                   results = JSON.parse(File.read("gitestresults.json"))
                   
                   results['data'].each do |test|                  
