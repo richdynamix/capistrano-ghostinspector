@@ -40,7 +40,7 @@ tests:
 ```
 
 You can obtain your API key, suite ID and test ID from your Ghost Inspector console. At the bottom right of the suite page you will see API Access e.g. 
-`https://api.ghostinspector.com/v1/suites/`<SUITE ID IS HERE>`/execute/?apiKey=`<API KEY ID IS HERE>
+`https://api.ghostinspector.com/v1/suites/`SUITE ID IS HERE`/execute/?apiKey=`API KEY ID IS HERE
 
 Add as many suites or tests as you like, the name you give your test isn't important but you should make it easy to remember when executing the test.
 
