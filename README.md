@@ -6,6 +6,12 @@
 [Ghost Inspector](https://ghostinspector.com/ "Ghost Inspector") is an automated website regression testing tool. This [Capistrano](http://capistranorb.com/ "Capistrano") plugin is a simple, configurable gem that will provide the following features.
 
 
+#### Features
+- Set individual tests/suites to run from command line
+- Exclude individual stages
+- Auto rollback to previous version on failed tests (can be disabled in config per stage)
+- Auto configure start URL to reuse tests across multiple stages
+
 ## Installation
 
 Add this line to your application's Gemfile:
