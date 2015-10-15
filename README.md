@@ -22,9 +22,9 @@ Or install it yourself as:
 
     $ gem install capistrano-ghostinspector
 
-And the add 
+And the add the following to the top of your `deploy.rb` file
 
-	`require 'capistrano-ghostinspector'` at the top of your `deploy.rb` file
+	`require 'capistrano-ghostinspector'`
 
 ## Configuration
 

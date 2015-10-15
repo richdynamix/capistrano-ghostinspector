@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'capistrano/ghostinspector/version'
+require 'richdynamix/ghostinspector/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "capistrano-ghostinspector"
-  spec.version       = Capistrano::Ghostinspector::VERSION
+  spec.version       = Richdynamix::Ghostinspector::VERSION
   spec.authors       = ["Steven Richardson"]
   spec.email         = ["steven@richdynamix.com"]
   spec.summary       = "Ghost Inspector - Capistrano"
@@ -20,4 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'capistrano'
+  spec.add_development_dependency 'capistrano-spec'
 end
