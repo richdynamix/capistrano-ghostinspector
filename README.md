@@ -1,6 +1,6 @@
 # Capistrano::Ghostinspector
 
-[![Scrutinizer Code Quality](https://www2.scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/badges/quality-score.png?b=master)](https://www2.scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/?branch=master) [![Build Status](https://www2.scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/badges/build.png?b=master)](https://www2.scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/build-status/master)
+[![Scrutinizer Code Quality](https://www2.scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/badges/quality-score.png?b=develop)](https://www2.scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/?branch=develop)[![Build Status](https://www2.scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/badges/build.png?b=develop)](https://www2.scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/build-status/develop)
 
 
 [Ghost Inspector](https://ghostinspector.com/ "Ghost Inspector") is an automated website regression testing tool. This [Capistrano](http://capistranorb.com/ "Capistrano") plugin is a simple, configurable gem that will provide the following features.
