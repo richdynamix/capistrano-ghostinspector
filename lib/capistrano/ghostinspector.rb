@@ -1,5 +1,6 @@
 require "capistrano/ghostinspector/version"
 require "capistrano/ghostinspector/arrays"
+require "capistrano/ghostinspector/api"
 require "capistrano"
 
 module Capistrano
@@ -47,7 +48,7 @@ module Capistrano
 
                   puts "* * * Running Ghost Inspector Test * * *"
 
-                  passing = Capistrano::Ghostinspector.webservice("tests", test, gi_api_key, domain, rollback)
+                  passing = Capistrano::Ghostinspector.executeApi("tests", test, gi_api_key, domain, rollback)
 
                   # run_locally %{curl "https://api.ghostinspector.com/v1/tests/#{test}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}"  > gitestresults.json}
                   # results = JSON.parse(File.read("gitestresults.json"))
@@ -59,7 +60,7 @@ module Capistrano
 
                   puts "* * * Running Ghost Inspector Suite * * *"
 
-                  passing = Capistrano::Ghostinspector.webservice("suites", suite, gi_api_key, domain, rollback)
+                  passing = Capistrano::Ghostinspector.executeApi("suites", suite, gi_api_key, domain, rollback)
 
                   # run_locally %{curl "https://api.ghostinspector.com/v1/suites/#{suite}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}" > gitestresults.json}
                   # results = JSON.parse(File.read("gitestresults.json"))
