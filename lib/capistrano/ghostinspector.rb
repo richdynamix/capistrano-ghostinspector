@@ -64,9 +64,9 @@ module Capistrano
 
                   puts "* * * Running Ghost Inspector Test * * *"
 
-                  run_locally %{curl "https://api.ghostinspector.com/v1/tests/#{test}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}"  > gitestresults.json}
-                  results = JSON.parse(File.read("gitestresults.json"))
-                  set :passing, results['data']['passing']
+                  # run_locally %{curl "https://api.ghostinspector.com/v1/tests/#{test}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}"  > gitestresults.json}
+                  # results = JSON.parse(File.read("gitestresults.json"))
+                  # set :passing, results['data']['passing']
                 end
 
                 # run each suite
@@ -74,12 +74,12 @@ module Capistrano
 
                   puts "* * * Running Ghost Inspector Suite * * *"
 
-                  run_locally %{curl "https://api.ghostinspector.com/v1/suites/#{suite}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}" > gitestresults.json}
-                  results = JSON.parse(File.read("gitestresults.json"))
+                  # run_locally %{curl "https://api.ghostinspector.com/v1/suites/#{suite}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}" > gitestresults.json}
+                  # results = JSON.parse(File.read("gitestresults.json"))
                   
-                  results['data'].each do |test|                  
-                    set :passing, test['passing']
-                  end
+                  # results['data'].each do |test|                  
+                  #   set :passing, test['passing']
+                  # end
                 end
 
                 # If any test fails and the stage allows rollbacks then

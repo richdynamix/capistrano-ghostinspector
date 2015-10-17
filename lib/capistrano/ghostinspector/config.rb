@@ -1,4 +1,4 @@
-module Richdynamix
+module Capistrano
   module Ghostinspector
     def self.set_config(config)
 
