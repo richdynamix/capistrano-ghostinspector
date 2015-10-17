@@ -1,4 +1,4 @@
-require "richdynamix/ghostinspector/version"
+require "capistrano/ghostinspector/version"
 require "capistrano"
 require 'json'
 
