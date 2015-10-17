@@ -37,37 +37,16 @@ module Capistrano
 
                 set :passing, true
 
-                # if (rollback == false)
-                #   set :immediate, "&immediate=1"
-                # else
-                #   set :immediate, ""
-                # end
-
                 # run each test
                 test_run.each do |test|
-
                   puts "* * * Running Ghost Inspector Test * * *"
-
                   passing = Capistrano::Ghostinspector.executeApi("tests", test, gi_api_key, domain, rollback)
-
-                  # run_locally %{curl "https://api.ghostinspector.com/v1/tests/#{test}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}"  > gitestresults.json}
-                  # results = JSON.parse(File.read("gitestresults.json"))
-                  # set :passing, results['data']['passing']
                 end
 
                 # run each suite
                 suite_run.each do |suite|
-
                   puts "* * * Running Ghost Inspector Suite * * *"
-
                   passing = Capistrano::Ghostinspector.executeApi("suites", suite, gi_api_key, domain, rollback)
-
-                  # run_locally %{curl "https://api.ghostinspector.com/v1/suites/#{suite}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}" > gitestresults.json}
-                  # results = JSON.parse(File.read("gitestresults.json"))
-                  
-                  # results['data'].each do |test|                  
-                  #   set :passing, test['passing']
-                  # end
                 end
 
                 # If any test fails and the stage allows rollbacks then
@@ -75,6 +54,8 @@ module Capistrano
                 if (passing == false && rollback == true)
                   puts "* * * Ghost Inspector Failed. Rolling back * * *"
                   run_locally %{cap #{stage} deploy:rollback}
+                else
+                  puts "* * * Ghost Inspector Complete. Deployment Complete * * *"
                 end
 
               end
