@@ -1,30 +1,33 @@
 require "capistrano/ghostinspector/version"
+require "capistrano/ghostinspector/config"
 require "capistrano"
 require 'json'
 
-module Richdynamix
+module Capistrano
   module Ghostinspector
     def self.load_into(config)
       config.load do
-        after "deploy", "richdynamix:ghostinspector:run"
+        after "deploy", "capistrano:ghostinspector:run"
 
-        namespace :richdynamix do
+        namespace :capistrano do
           namespace :ghostinspector do
             task :run, :only => { :primary => true } do
 
-              giconfig = YAML::load(File.read("gi_config.yaml"))
+              Capistrano::Ghostinspector.set_config()
 
-              set :gi_api_key, giconfig["APIKEY"]
+              # giconfig = YAML::load(File.read("gi_config.yaml"))
 
-              # Get tests and suites from command line
-              set :gitest, fetch(:gitest, nil)
-              set :gisuite, fetch(:gisuite, nil)
+              # set :gi_api_key, giconfig["APIKEY"]
 
-              # Check if GI is enabled for this deployment (Default: true)
-              set :gi_enabled, fetch(:gi_enabled, giconfig["gi_enabled"])
+              # # Get tests and suites from command line
+              # set :gitest, fetch(:gitest, nil)
+              # set :gisuite, fetch(:gisuite, nil)
 
-              # Should we rollback on failed GI tests (Default: true)
-              set :rollback, fetch(:rollback, giconfig["rollback"])
+              # # Check if GI is enabled for this deployment (Default: true)
+              # set :gi_enabled, fetch(:gi_enabled, giconfig["gi_enabled"])
+
+              # # Should we rollback on failed GI tests (Default: true)
+              # set :rollback, fetch(:rollback, giconfig["rollback"])
   
               # Get array of tests to run
               test_run = Array.new
@@ -98,5 +101,5 @@ end
 
 
 if Capistrano::Configuration.instance
-  Richdynamix::Ghostinspector.load_into(Capistrano::Configuration.instance)
+  Capistrano::Ghostinspector.load_into(Capistrano::Configuration.instance)
 end

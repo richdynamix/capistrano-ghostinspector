@@ -31,7 +31,7 @@ Or install it yourself as:
 And the add the following to the top of your `deploy.rb` file
 
 ```ruby
-require 'capistrano-ghostinspector'
+require 'capistrano/ghostinspector'
 ```
 
 ## Configuration
