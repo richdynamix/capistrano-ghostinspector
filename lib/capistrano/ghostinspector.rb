@@ -1,5 +1,5 @@
 require "capistrano/ghostinspector/version"
-require "capistrano/ghostinspector/config"
+require "capistrano/ghostinspector/arrays"
 require "capistrano"
 require 'json'
 
@@ -13,41 +13,42 @@ module Capistrano
           namespace :ghostinspector do
             task :run, :only => { :primary => true } do
 
-              Capistrano::Ghostinspector.set_config()
+              giconfig = YAML::load(File.read("gi_config.yaml"))
 
-              # giconfig = YAML::load(File.read("gi_config.yaml"))
+              set :gi_api_key, giconfig["APIKEY"]
 
-              # set :gi_api_key, giconfig["APIKEY"]
+              # Get tests and suites from command line
+              set :gitest, fetch(:gitest, nil)
+              set :gisuite, fetch(:gisuite, nil)
 
-              # # Get tests and suites from command line
-              # set :gitest, fetch(:gitest, nil)
-              # set :gisuite, fetch(:gisuite, nil)
+              # Check if GI is enabled for this deployment (Default: true)
+              set :gi_enabled, fetch(:gi_enabled, giconfig["gi_enabled"])
 
-              # # Check if GI is enabled for this deployment (Default: true)
-              # set :gi_enabled, fetch(:gi_enabled, giconfig["gi_enabled"])
-
-              # # Should we rollback on failed GI tests (Default: true)
-              # set :rollback, fetch(:rollback, giconfig["rollback"])
+              # Should we rollback on failed GI tests (Default: true)
+              set :rollback, fetch(:rollback, giconfig["rollback"])
   
-              # Get array of tests to run
-              test_run = Array.new
-              if (gitest != nil)
-                gitest.split(',').each do |key|
-                  if (giconfig["tests"].has_key?(key))
-                    test_run << giconfig["tests"][key] 
-                  end 
-                end
-              end
+              test_run = Capistrano::Ghostinspector.tests_array(gitest, giconfig["tests"])
+              suite_run = Capistrano::Ghostinspector.tests_array(gisuite, giconfig["suites"])
 
-              # Get array of suites to run
-              suite_run = Array.new
-              if (gisuite != nil)
-                gisuite.split(',').each do |key|
-                  if (giconfig["suites"].has_key?(key))
-                    suite_run << giconfig["suites"][key] 
-                  end 
-                end
-              end
+              # Get array of tests to run
+              # test_run = Array.new
+              # if (gitest != nil)
+              #   gitest.split(',').each do |key|
+              #     if (giconfig["tests"].has_key?(key))
+              #       test_run << giconfig["tests"][key] 
+              #     end 
+              #   end
+              # end
+
+              # # Get array of suites to run
+              # suite_run = Array.new
+              # if (gisuite != nil)
+              #   gisuite.split(',').each do |key|
+              #     if (giconfig["suites"].has_key?(key))
+              #       suite_run << giconfig["suites"][key] 
+              #     end 
+              #   end
+              # end
 
               if (gi_enabled == true)
 

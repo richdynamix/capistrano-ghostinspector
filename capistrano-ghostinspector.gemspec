@@ -5,7 +5,7 @@ require 'capistrano/ghostinspector/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "capistrano-ghostinspector"
-  spec.version       = Richdynamix::Ghostinspector::VERSION
+  spec.version       = Capistrano::Ghostinspector::VERSION
   spec.authors       = ["Steven Richardson"]
   spec.email         = ["steven@richdynamix.com"]
   spec.summary       = "Ghost Inspector - Capistrano"
