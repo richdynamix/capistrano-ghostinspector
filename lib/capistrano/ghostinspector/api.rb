@@ -26,8 +26,8 @@ module Capistrano
 			results = JSON.parse(data)
 
 			if (type == "suite")
-				results['data'].each do |test|                  
-				  passing = test['passing']
+				results['data'].each do |testItem|                  
+				  passing = testItem['passing']
 				end
 			else 
 				passing = results['data']['passing']
