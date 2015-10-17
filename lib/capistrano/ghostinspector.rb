@@ -13,7 +13,7 @@ module Capistrano
           namespace :ghostinspector do
             task :run, :only => { :primary => true } do
 
-              giconfig = YAML::load(File.read("gi_config.yaml"))
+              set :giconfig = YAML::load(File.read("gi_config.yaml"))
 
               set :gi_api_key, giconfig["APIKEY"]
 
@@ -26,27 +26,19 @@ module Capistrano
 
               # Should we rollback on failed GI tests (Default: true)
               set :rollback, fetch(:rollback, giconfig["rollback"])
-  
-              # List all tests to run in Ghost Inspector
-              test_run = Capistrano::Ghostinspector.getTests(gitest, giconfig["tests"])
-
-              # List all suites to run in Ghost Inspector
-              suite_run = Capistrano::Ghostinspector.getTests(gisuite, giconfig["suites"])
 
               if (gi_enabled == true)
 
-                set :passing, true
-
                 # run each test
-                test_run.each do |test|
+                Capistrano::Ghostinspector.getTests(gitest, giconfig["tests"]).each do |test|
                   puts "* * * Running Ghost Inspector Test * * *"
-                  passing = Capistrano::Ghostinspector.executeApi("tests", test, gi_api_key, domain, rollback)
+                  set :passing, Capistrano::Ghostinspector.executeApi("tests", test, gi_api_key, domain, rollback)
                 end
 
                 # run each suite
-                suite_run.each do |suite|
+                Capistrano::Ghostinspector.getTests(gisuite, giconfig["suites"]).each do |suite|
                   puts "* * * Running Ghost Inspector Suite * * *"
-                  passing = Capistrano::Ghostinspector.executeApi("suites", suite, gi_api_key, domain, rollback)
+                  set :passing, Capistrano::Ghostinspector.executeApi("suites", suite, gi_api_key, domain, rollback)
                 end
 
                 # If any test fails and the stage allows rollbacks then

@@ -11,7 +11,7 @@ module Capistrano
 			immediate = "&immediate=1"
 		else
 			immediate = ""
-			puts "* * * Gathering results. This could be a few minutes. * * *"
+			puts "* * * Gathering results. This could take a few minutes. * * *"
 		end
 		
 		# Default all tests pass
@@ -32,6 +32,7 @@ module Capistrano
 			else 
 				passing = results['data']['passing']
 			end
+
 		end
 
 		return passing
