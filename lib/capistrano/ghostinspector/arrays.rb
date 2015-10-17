@@ -1,6 +1,6 @@
 module Capistrano
   module Ghostinspector
-    def self.tests_array(test, giconfig)
+    def self.getTests(test, giconfig)
 
 		# Return an array of tests/suites to
 		# run in ghost inspector

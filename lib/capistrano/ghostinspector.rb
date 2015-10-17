@@ -1,7 +1,6 @@
 require "capistrano/ghostinspector/version"
 require "capistrano/ghostinspector/arrays"
 require "capistrano"
-require 'json'
 
 module Capistrano
   module Ghostinspector
@@ -27,43 +26,28 @@ module Capistrano
               # Should we rollback on failed GI tests (Default: true)
               set :rollback, fetch(:rollback, giconfig["rollback"])
   
-              test_run = Capistrano::Ghostinspector.tests_array(gitest, giconfig["tests"])
-              suite_run = Capistrano::Ghostinspector.tests_array(gisuite, giconfig["suites"])
+              # List all tests to run in Ghost Inspector
+              test_run = Capistrano::Ghostinspector.getTests(gitest, giconfig["tests"])
 
-              # Get array of tests to run
-              # test_run = Array.new
-              # if (gitest != nil)
-              #   gitest.split(',').each do |key|
-              #     if (giconfig["tests"].has_key?(key))
-              #       test_run << giconfig["tests"][key] 
-              #     end 
-              #   end
-              # end
-
-              # # Get array of suites to run
-              # suite_run = Array.new
-              # if (gisuite != nil)
-              #   gisuite.split(',').each do |key|
-              #     if (giconfig["suites"].has_key?(key))
-              #       suite_run << giconfig["suites"][key] 
-              #     end 
-              #   end
-              # end
+              # List all suites to run in Ghost Inspector
+              suite_run = Capistrano::Ghostinspector.getTests(gisuite, giconfig["suites"])
 
               if (gi_enabled == true)
 
                 set :passing, true
 
-                if (rollback == false)
-                  set :immediate, "&immediate=1"
-                else
-                  set :immediate, ""
-                end
+                # if (rollback == false)
+                #   set :immediate, "&immediate=1"
+                # else
+                #   set :immediate, ""
+                # end
 
                 # run each test
                 test_run.each do |test|
 
                   puts "* * * Running Ghost Inspector Test * * *"
+
+                  passing = Capistrano::Ghostinspector.webservice("tests", test, gi_api_key, domain, rollback)
 
                   # run_locally %{curl "https://api.ghostinspector.com/v1/tests/#{test}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}"  > gitestresults.json}
                   # results = JSON.parse(File.read("gitestresults.json"))
@@ -74,6 +58,8 @@ module Capistrano
                 suite_run.each do |suite|
 
                   puts "* * * Running Ghost Inspector Suite * * *"
+
+                  passing = Capistrano::Ghostinspector.webservice("suites", suite, gi_api_key, domain, rollback)
 
                   # run_locally %{curl "https://api.ghostinspector.com/v1/suites/#{suite}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}" > gitestresults.json}
                   # results = JSON.parse(File.read("gitestresults.json"))
