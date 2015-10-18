@@ -3,11 +3,11 @@ require "capistrano/ghostinspector/analytics"
 module Capistrano
   module Ghostinspector
     def self.configure(config)
-    	config.load do
+    	# config.load do
 
-	    	namespace :capistrano do
-	          namespace :ghostinspector do
-	            task :configure, :only => { :primary => true } do
+	    # 	namespace :capistrano do
+	    #       namespace :ghostinspector do
+	    #         task :configure, :only => { :primary => true } do
 
 					set :giconfig, YAML::load(File.read("gi_config.yaml"))
 
@@ -27,11 +27,11 @@ module Capistrano
 					# Should we rollback on failed GI tests (Default: true)
 					set :rollback, fetch(:rollback, giconfig["rollback"])
 
-					end
-				end
-			end
+		# 			end
+		# 		end
+		# 	end
 			
-		end
+		# end
 
     end
   end
