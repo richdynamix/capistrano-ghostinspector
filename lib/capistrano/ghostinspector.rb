@@ -14,7 +14,7 @@ module Capistrano
         namespace :capistrano do
           namespace :ghostinspector do
             task :run, :only => { :primary => true } do
-
+              
               Capistrano::Ghostinspector.configure(config)
 
               # set :giconfig = YAML::load(File.read("gi_config.yaml"))
