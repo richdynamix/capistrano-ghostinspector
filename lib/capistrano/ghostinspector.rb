@@ -13,7 +13,7 @@ module Capistrano
           namespace :ghostinspector do
             task :run, :only => { :primary => true } do
 
-              set :giconfig = YAML::load(File.read("gi_config.yaml"))
+              set :giconfig, YAML::load(File.read("gi_config.yaml"))
 
               set :gi_api_key, giconfig["APIKEY"]
 
