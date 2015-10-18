@@ -8,14 +8,14 @@ module Capistrano
   module Ghostinspector
     def self.load_into(config)
       config.load do
-        after "deploy", "capistrano:ghostinspector:configure"
-        after "capistrano:ghostinspector:configure", "capistrano:ghostinspector:run"
+        after "deploy", "capistrano:ghostinspector:run"
+        # after "capistrano:ghostinspector:configure", "capistrano:ghostinspector:run"
 
         namespace :capistrano do
           namespace :ghostinspector do
             task :run, :only => { :primary => true } do
 
-              # Capistrano::Ghostinspector.configure(config)
+              Capistrano::Ghostinspector.configure(config)
 
               # set :giconfig = YAML::load(File.read("gi_config.yaml"))
 
@@ -35,7 +35,7 @@ module Capistrano
               # # Should we rollback on failed GI tests (Default: true)
               # set :rollback, fetch(:rollback, giconfig["rollback"])
 
-              puts(rollback)
+              puts(:giconfig)
 
               # if (gi_enabled == true)
 
