@@ -15,7 +15,11 @@ module Capistrano
 
               set :giconfig = YAML::load(File.read("gi_config.yaml"))
 
+              # Ghost Inspector API key
               set :gi_api_key, giconfig["APIKEY"]
+
+              # Google Analytics Tracking Property
+              set :ga_property, giconfig["ga_property"]
 
               # Get tests and suites from command line
               set :gitest, fetch(:gitest, nil)
@@ -32,13 +36,13 @@ module Capistrano
                 # run each test
                 Capistrano::Ghostinspector.getTests(gitest, giconfig["tests"]).each do |test|
                   puts "* * * Running Ghost Inspector Test * * *"
-                  set :passing, Capistrano::Ghostinspector.executeApi("tests", test, gi_api_key, domain, rollback)
+                  set :passing, Capistrano::Ghostinspector.executeApi(config, "tests", test)
                 end
 
                 # run each suite
                 Capistrano::Ghostinspector.getTests(gisuite, giconfig["suites"]).each do |suite|
                   puts "* * * Running Ghost Inspector Suite * * *"
-                  set :passing, Capistrano::Ghostinspector.executeApi("suites", suite, gi_api_key, domain, rollback)
+                  set :passing, Capistrano::Ghostinspector.executeApi(config, "suites", suite)
                 end
 
                 # If any test fails and the stage allows rollbacks then
