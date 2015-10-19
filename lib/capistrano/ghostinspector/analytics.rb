@@ -9,17 +9,22 @@ module Capistrano
 	    	tracker = Staccato.tracker(ga_property)
 
 			# inform GA of a new deployment
-			tracker.event(category: 'deployment', action: 'deploy', label: current_revision, non_interactive: true)
+			tracker.event(category: 'deployment', action: "deploy", label: current_revision, non_interactive: true)
 
 	    end
 
 	    def self.pushErrors(ga_property, current_revision, data)
 
-			# send the errors to GA
-
 			tracker = Staccato.tracker(ga_property)
 
-			puts(data)
+			data['steps'].each do |step|
+
+				if (step['passing'] == false)
+					# send the errors to GA
+					tracker.event(category: 'error', action: step['error'], label: "Command: #{step['command']} - Target: #{step['target']}", non_interactive: true)
+				end
+
+			end
 
 	    end
 
