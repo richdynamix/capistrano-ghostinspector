@@ -1,19 +1,28 @@
 require "capistrano/ghostinspector/analytics"
+require "staccato"
 
 module Capistrano
   module Ghostinspector
-    def self.reportDeployment(config)
+	  module Analytics
+	    def self.pushDeployment(ga_property, current_revision)
 
-		# inform GA of a new deployment
+	    	tracker = Staccato.tracker(ga_property)
 
+			# inform GA of a new deployment
+			tracker.event(category: 'deployment', action: 'deploy', label: current_revision, non_interactive: true)
 
-    end
+	    end
 
-    def self.sendErrors(config, data)
+	    def self.pushErrors(ga_property, current_revision, data)
 
-		# send the errors to GA
+			# send the errors to GA
 
-    end
+			tracker = Staccato.tracker(ga_property)
 
+			puts(data)
+
+	    end
+
+	  end
   end
 end
