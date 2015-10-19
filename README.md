@@ -11,6 +11,8 @@
 - Exclude individual stages
 - Auto rollback to previous version on failed tests (can be disabled in config per stage)
 - Auto configure start URL to reuse tests across multiple stages
+- Send deployment information to Google Analytics
+- Send errors to Google Analytics on failed tests
 
 ## Installation
 
@@ -42,6 +44,7 @@ First thing you need to do is create your `YAML` file (`gi_config.yaml`) in the 
 APIKEY: XXXXXXXXXXXXXXXXXXX
 gi_enabled: true
 rollback: true
+ga_property: ""
 suites:
     aboutpage: "XXXXXXXXXXXXXXXXXXX"
     suite2: ""
@@ -67,26 +70,28 @@ By default the `rollback` feature is enabled, you can disabled this for all stag
 set :rollback, false
 ```
 
+The Google Analytics property must be inserted into the `ga_property` in order to log deployments and errors. Simply update your YAML to include this `ga_property: "UA-XXXXXXXX-1"`. To disable the Google Analytics tracking just leave the `ga_property` as empty string i.e. `ga_property: ""` in your YAML
+
 ## Usage
 
 Run a particular test when deploying to staging -
 
-	$ cap staging deploy -s gitest=homepage
+    $ cap staging deploy -s gitest=homepage
 
 
 Run a multiple tests when deploying to staging -
 
-	$ cap staging deploy -s gitest=homepage,test2,test3
+    $ cap staging deploy -s gitest=homepage,test2,test3
 
 
 Run a particular suite when deploying to staging -
 
-	$ cap staging deploy -s gisuite=aboutpage
+    $ cap staging deploy -s gisuite=aboutpage
 
 
 Run a multiple suites when deploying to staging -
 
-	$ cap staging deploy -s gisuite=aboutpage,suite2
+    $ cap staging deploy -s gisuite=aboutpage,suite2
 
 
 ## Contributing

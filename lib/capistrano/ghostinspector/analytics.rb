@@ -9,7 +9,7 @@ module Capistrano
 	    	tracker = Staccato.tracker(ga_property)
 
 			# inform GA of a new deployment
-			tracker.event(category: 'deployment', action: "deploy", label: current_revision, non_interactive: true)
+			tracker.event(category: 'deployment', action: 'deploy', label: current_revision, non_interactive: true)
 
 	    end
 
