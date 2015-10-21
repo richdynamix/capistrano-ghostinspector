@@ -14,20 +14,29 @@ module Capistrano
 			# Default all tests pass
 			passing = true
 
+			analytics = Analytics.new(ga_property, domain)
+
 			# Lets push the deployment in GA if the configuration allows it.
-			Capistrano::Ghostinspector::Analytics.pushDeployment(ga_property, current_revision)
+			analytics.pushDeployment(current_revision)
+
+			# testing only
+			results = JSON.parse(File.read("gitestresults.json"))
+
+			# puts(results)
+
+			analytics.pushData(results['data'])
 
 			# # Perform the API request and get the results
-			results = self.sendRequest(type, test, gi_api_key, domain, immediate)
+			# results = self.sendRequest(type, test, gi_api_key, domain, immediate)
 
 			# Check the data returned for failed tests
-			if (rollback == true) 
-				passing = self.getPassing(type, results, ga_property)
-			end
+			# if (rollback == true) 
+			# 	passing = self.getPassing(type, results, ga_property)
+			# end
 
-			if (passing == false && ga_property != "")
-				Capistrano::Ghostinspector::Analytics.pushErrors(ga_property, current_revision, results['data'])
-			end
+			# if (passing == false && ga_property != "")
+			# 	Capistrano::Ghostinspector::Analytics.pushErrors(ga_property, current_revision, results['data'])
+			# end
 
 			return passing
 			
