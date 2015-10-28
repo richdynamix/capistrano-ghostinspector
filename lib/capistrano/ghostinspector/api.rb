@@ -1,51 +1,54 @@
-require "capistrano/ghostinspector/analytics"
 require 'net/https'
 require 'json'
 
 module Capistrano
   module Ghostinspector
-	  module Api
-	    def self.executeApi(type, test, gi_api_key, domain, rollback, ga_property, current_revision)
+	  class Api
 
-	    	# Determine if we should get results to 
+	  	def initialize(gi_api_key, domain, rollback, ga_property)
+	  		@apiKey = gi_api_key
+	  		@domain = domain
+	  		@rollback = rollback
+	  		@ga_property = ga_property
+
+	  		# Determine if we should get results to 
 	    	# check for any failed tests
-			immediate = self.includeResults(rollback, ga_property)
+			@immediate = includeResults()
+	  	end
+
+
+	    def executeApi(type, test)
 			
 			# Default all tests pass
 			passing = true
 
-			analytics = Analytics.new(ga_property, domain)
-
-			# Lets push the deployment in GA if the configuration allows it.
-			analytics.pushDeployment(current_revision)
-
 			# testing only
 			results = JSON.parse(File.read("gitestresults.json"))
-
-			# puts(results)
-
-			analytics.pushData(results['data'])
+			# results = JSON.parse(File.read("suiteresults.json"))
 
 			# # Perform the API request and get the results
-			# results = self.sendRequest(type, test, gi_api_key, domain, immediate)
+			# results = sendRequest(type, test)
 
 			# Check the data returned for failed tests
-			# if (rollback == true) 
-			# 	passing = self.getPassing(type, results, ga_property)
-			# end
+			if (@rollback == true) 
+				passing = getPassing(type, results)
+			end
 
-			# if (passing == false && ga_property != "")
-			# 	Capistrano::Ghostinspector::Analytics.pushErrors(ga_property, current_revision, results['data'])
-			# end
+			data = Array.new
+			data << passing
+			data << results
 
-			return passing
+			return data
 			
 	    end
 
-	    def self.includeResults(rollback, ga_property)
+	    private
+
+	    def includeResults()
+
 	    	# Determine if we should get results to 
 	    	# check for any failed tests
-			if (rollback == false && ga_property == "")
+			if (@rollback == false && @ga_property == "")
 				immediate = "&immediate=1"
 			else
 				immediate = ""
@@ -55,10 +58,10 @@ module Capistrano
 			return immediate
 	    end
 
-	    def self.sendRequest(type, test, gi_api_key, domain, immediate)
+	    def sendRequest(type, test)
 	    	
 	    	# execute the Ghost Inspector API call
-			uri = URI("https://api.ghostinspector.com/v1/#{type}/#{test}/execute/?apiKey=#{gi_api_key}&startUrl=http://#{domain}/#{immediate}")
+			uri = URI("https://api.ghostinspector.com/v1/#{@type}/#{@test}/execute/?apiKey=#{@apiKey}&startUrl=http://#{@domain}/#{@immediate}")
 			data = Net::HTTP.get(uri)
 
 			results = JSON.parse(data)
@@ -66,14 +69,14 @@ module Capistrano
 			return results
 	    end
 
-	    def self.getPassing(type, results, ga_property)
-	    	
+	    def getPassing(type, results)
+
 	    	if (type == "suite")
-				results['data'].each do |testItem|                  
-				  passing = testItem['passing']
+				results["data"].each do |testItem|                  
+				  passing = testItem["passing"]
 				end
 			else 
-				passing = results['data']['passing']
+				passing = results["data"][0]["passing"]
 			end
 
 			return passing
