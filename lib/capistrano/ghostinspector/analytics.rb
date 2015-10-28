@@ -36,8 +36,12 @@ module Capistrano
 
 			# inform GA of a new deployment
 			@action = "deploy to #{@options[:stage]}"
-			hit = Staccato::Event.new(@tracker, category: 'deployment', action: @action, label: @options[:deployed], document_hostname: @options[:domain], document_path: @action)
+			current_revision = @options[:current_revision][0,7]
+			previous_revision = @options[:previous_revision][0,7]
+			@deployed = "Deployed revision #{current_revision} from branch #{@options[:branch]} (replacing #{previous_revision})"
+			hit = Staccato::Event.new(@tracker, category: 'deployment', action: @action, label: @deployed, document_hostname: @options[:domain], document_path: @action)
 			hit.add_custom_dimension(@options[:ga_custom_1], "deployment")
+			hit.add_custom_dimension(@options[:ga_custom_2], "#{@options[:tickets]}")
 			hit.track!
 
 	    end
@@ -49,6 +53,7 @@ module Capistrano
 
 					hit = Staccato::Event.new(@tracker, category: 'success', action: step['command'], label: step['target'], document_hostname: @options[:domain], document_path: testName)
 					hit.add_custom_dimension(@options[:ga_custom_1], testName)
+					hit.add_custom_dimension(@options[:ga_custom_2], "#{@options[:tickets]}")
 					hit.track!
 
 				end
@@ -61,6 +66,7 @@ module Capistrano
 
 						hit = Staccato::Event.new(@tracker, category: 'error', action: step['error'], label: "Command: #{step['command']} - Target: #{step['target']}", document_hostname: @options[:domain], document_path: testName)
 						hit.add_custom_dimension(@options[:ga_custom_1], testName)
+						hit.add_custom_dimension(@options[:ga_custom_2], "#{@options[:tickets]}")
 						hit.track!
 					end
 
@@ -73,6 +79,7 @@ module Capistrano
 
 	    	hit = Staccato::Pageview.new(@tracker, hostname: @options[:domain], path: testName, title: testName, document_hostname: @options[:domain])
 			hit.add_custom_dimension(@options[:ga_custom_1], testName)
+			hit.add_custom_dimension(@options[:ga_custom_2], "#{@options[:tickets]}")
 			hit.track!
 	    	
 	    end

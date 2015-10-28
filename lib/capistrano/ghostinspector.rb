@@ -1,6 +1,8 @@
 require "capistrano"
 require "capistrano/ghostinspector/version"
 require "capistrano/ghostinspector/arrays"
+require "capistrano/ghostinspector/api"
+require "capistrano/ghostinspector/analytics"
 
 module Capistrano
   module Ghostinspector
@@ -30,11 +32,6 @@ module Capistrano
 
             # Should we rollback on failed GI tests (Default: true)
             set :rollback, fetch(:rollback, gi_config['rollback'])
-
-            set :branch, fetch(:branch, "default")
-
-            set :deployed, "Deployed revision #{current_revision[0,7]} from branch #{branch} (replacing #{previous_revision[0,7]})"
-
           end
           
           desc "Run Ghost Inspector Tests"
@@ -71,17 +68,25 @@ module Capistrano
           task :sendGA, :only => { :primary => true } do
 
             puts "* * * Sending Data to Google Analytics * * *"
+
+            jira_project_code = gi_config["jira_project_code"]
+
+            log = capture(
+              "cd #{current_path} && git log #{previous_revision[0,7]}..#{current_revision[0,7]} --format=\"%s\" | grep -oh '#{jira_project_code}-[0-9]\\+' | sort | uniq"
+            )
             
             options = { 
               :ga_property => fetch(:ga_property),
               :ga_custom_1 => gi_config["ga_custom_1"],
               :ga_custom_2 => gi_config["ga_custom_2"],
               :domain => fetch(:domain), 
-              :deployed => fetch(:deployed), 
-              :stage => fetch(:stage)
+              :current_revision => fetch(:current_revision),
+              :previous_revision => fetch(:previous_revision),
+              :branch => fetch(:branch, "default"),
+              :stage => fetch(:stage),
+              :tickets => Capistrano::Ghostinspector.getTickets(log)
             }
 
-            # analytics = Analytics.new(fetch(:ga_property), fetch(:domain), fetch(:deployed), fetch(:stage), gi_config)
             analytics = Analytics.new(options)
 
             @collection.each do |item|
@@ -119,6 +124,29 @@ module Capistrano
 
       end
     end
+
+
+    def self.getTickets(log)
+
+        tickets = ""
+        log.each_line do |line|
+            line.delete!('";')
+            line.strip!
+            line.gsub!("'", '\u0027')
+            tickets = "#{tickets}, #{line}"
+        end
+
+        if (tickets.to_s == "")
+            tickets = "None"
+        else
+            tickets[0] = ''
+        end
+
+        return tickets
+
+    end
+
+
   end
 end
 
