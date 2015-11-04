@@ -13,7 +13,10 @@
 - Auto configure start URL to reuse tests across multiple stages
 - Send deployment information to Google Analytics
 - Send errors to Google Analytics on failed tests
-- Use Custom Dimensions in Google Analytics (test name, jira tickets)
+- Send successful test runs to Google Analytics
+- Use Custom Dimensions in Google Analytics
+- Send test names as Custom Dimension
+- Track Jira tickets as Custom Dimension
 
 ## Installation
 
@@ -76,7 +79,12 @@ set :rollback, false
 
 The Google Analytics property must be inserted into the `ga_property` in order to log deployments and errors. Simply update your YAML to include this `ga_property: "UA-XXXXXXXX-1"`. To disable the Google Analytics tracking just leave the `ga_property` as empty string i.e. `ga_property: ""` in your YAML.
 
-Since version `0.3.0`, Google Analytics now uses Custom Dimensions as outlined in the [Google Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters?hl=en#cd_ "Google Measurement Protocol") documentation. When you define a new custom dimension in Google Analytics you are given a new dimension index. Default accounts have 20 available indexes where as premium accounts have 200. The `ga_custom_1` property is used to define the custom dimension for the testname and `ga_custom_2` is used to define the Jira tickets. If you do not set the `ga_custom_1` or `ga_custom_2` properties then the default index of `1` & `2` will be used.
+Since version `0.3.0`, Google Analytics now uses Custom Dimensions as outlined in the [Google Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters?hl=en#cd_ "Google Measurement Protocol") documentation. When you define a new custom dimension in Google Analytics you are given a new dimension index. Default accounts have 20 available indexes where as premium accounts have 200. The `ga_custom_1` property is used to define the custom dimension for the testname and `ga_custom_2` is used to define the Jira tickets*. If you do not set the `ga_custom_1` or `ga_custom_2` properties then the default index of `1` & `2` will be used.
+
+\*_Jira tickets are extracted from the git log during the deployment. For this reason it can only track the tickets where you have correctly assigned the ticket number and identifier to the commit message. i.e._
+```
+git commit -am "GHOST-123 Add new item to the gem"
+```
 
 ## Usage
 
