@@ -43,7 +43,7 @@ module Capistrano
               
               @collection = Array.new
               # run each test
-              Capistrano::Ghostinspector.getTests(gitest, gi_config["tests"]).each do |test|
+              Capistrano::Ghostinspector.getTests(fetch(:gitest), gi_config["tests"]).each do |test|
                 puts "* * * Running Ghost Inspector Test * * *"
                 set :data, giApi.executeApi("tests", test)
 
@@ -52,12 +52,15 @@ module Capistrano
               end
 
               # run each suite
-              Capistrano::Ghostinspector.getTests(gisuite, gi_config["suites"]).each do |suite|
+              Capistrano::Ghostinspector.getTests(fetch(:gisuite), gi_config["suites"]).each do |suite|
                 puts "* * * Running Ghost Inspector Suite * * *"
-                set :data, giApi.executeApi("suites", test)
-                
-                items = { :passing => data[0], :results => data[1], :type =>  "suites"}
-                @collection << items
+                set :data, giApi.executeApi("suites", suite)
+
+                data[1]["data"].each do |test|
+                  items = { :passing => test["passing"], :results => test, :type =>  "suites"}
+                  @collection << items
+                end
+
               end
 
             end

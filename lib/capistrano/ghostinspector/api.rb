@@ -3,86 +3,91 @@ require 'json'
 
 module Capistrano
   module Ghostinspector
-	  class Api
+    class Api
 
-	  	def initialize(gi_api_key, domain, rollback, ga_property)
-	  		@apiKey = gi_api_key
-	  		@domain = domain
-	  		@rollback = rollback
-	  		@ga_property = ga_property
+      def initialize(gi_api_key, domain, rollback, ga_property)
+        @apiKey = gi_api_key
+        @domain = domain
+        @rollback = rollback
+        @ga_property = ga_property
 
-	  		# Determine if we should get results to 
-	    	# check for any failed tests
-			@immediate = includeResults()
-	  	end
+        # Determine if we should get results to
+        # check for any failed tests
+        @immediate = includeResults()
+      end
 
 
-	    def executeApi(type, test)
-			
-			# Default all tests pass
-			passing = true
+      def executeApi(type, test)
 
-			# testing only
-			results = JSON.parse(File.read("gitestresults.json"))
-			# results = JSON.parse(File.read("suiteresults.json"))
+        # Default all tests pass
+        passing = true
 
-			# # Perform the API request and get the results
-			# results = sendRequest(type, test)
+        # testing only
+        # results = JSON.parse(File.read("gitestresults.json"))
+        # results = JSON.parse(File.read("suiteresults.json"))
 
-			# Check the data returned for failed tests
-			if (@rollback == true) 
-				passing = getPassing(type, results)
-			end
+        # # Perform the API request and get the results
+        results = sendRequest(type, test)
 
-			data = Array.new
-			data << passing
-			data << results
+        # Check the data returned for failed tests
+        if (@rollback == true)
+          passing = getPassing(type, results)
+        end
 
-			return data
-			
-	    end
+        data = Array.new
+        data << passing
+        data << results
 
-	    private
+        return data
 
-	    def includeResults()
+      end
 
-	    	# Determine if we should get results to 
-	    	# check for any failed tests
-			if (@rollback == false && @ga_property == "")
-				immediate = "&immediate=1"
-			else
-				immediate = ""
-				puts "* * * Gathering results. This could take a few minutes. * * *"
-			end
+      private
 
-			return immediate
-	    end
+      def includeResults()
 
-	    def sendRequest(type, test)
-	    	
-	    	# execute the Ghost Inspector API call
-			uri = URI("https://api.ghostinspector.com/v1/#{@type}/#{@test}/execute/?apiKey=#{@apiKey}&startUrl=http://#{@domain}/#{@immediate}")
-			data = Net::HTTP.get(uri)
+        # Determine if we should get results to
+        # check for any failed tests
+        if (@rollback == false && @ga_property == "")
+          immediate = "&immediate=1"
+        else
+          immediate = ""
+          puts "* * * Gathering results. This could take a few minutes. * * *"
+        end
 
-			results = JSON.parse(data)
+        return immediate
+      end
 
-			return results
-	    end
+      def sendRequest(type, test)
 
-	    def getPassing(type, results)
+        uri = URI("https://api.ghostinspector.com/v1/#{type}/#{test}/execute/?apiKey=#{@apiKey}&startUrl=http://#{@domain}/#{@immediate}")
 
-	    	if (type == "suite")
-				results["data"].each do |testItem|                  
-				  passing = testItem["passing"]
-				end
-			else 
-				passing = results["data"][0]["passing"]
-			end
+        Net::HTTP.start(uri.host, uri.port,
+        :use_ssl => uri.scheme == 'https') do |http|
+          request = Net::HTTP::Get.new uri
+          http.read_timeout = 600
+          @response = http.request request
+        end
 
-			return passing
-	    	
-	    end
+        results = JSON.parse(@response.body)
 
-	  end
+        return results
+      end
+
+      def getPassing(type, results)
+
+        if (type == "suites")
+          results["data"].each do |testItem|
+            passing = testItem["passing"]
+          end
+        else
+          passing = results["data"]["passing"]
+        end
+
+        return passing
+
+      end
+
+    end
   end
 end
