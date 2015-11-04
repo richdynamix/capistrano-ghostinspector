@@ -22,9 +22,10 @@ module Capistrano
         # Default all tests pass
         passing = true
 
-        # testing only
+        # ------ TESTING ONLY ------
         # results = JSON.parse(File.read("gitestresults.json"))
         # results = JSON.parse(File.read("suiteresults.json"))
+        # ------ TESTING ONLY ------
 
         # # Perform the API request and get the results
         results = sendRequest(type, test)

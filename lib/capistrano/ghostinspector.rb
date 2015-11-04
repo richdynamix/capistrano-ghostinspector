@@ -23,6 +23,24 @@ module Capistrano
             # Google Analytics Tracking Property
             set :ga_property, gi_config['ga_property']
 
+            if gi_config.has_key?("ga_custom_1")
+              set :ga_custom_1, gi_config["ga_custom_1"]
+            else
+              set :ga_custom_1, "1"
+            end
+
+            if gi_config.has_key?("ga_custom_2")
+              set :ga_custom_2, gi_config["ga_custom_2"]
+            else
+              set :ga_custom_2, "2"
+            end
+
+            if gi_config.has_key?("jira_project_code")
+              set :jira_project_code, gi_config["jira_project_code"]
+            else
+              set :jira_project_code, "GHOST"
+            end
+
             # Get tests and suites from command line
             set :gitest, fetch(:gitest, nil)
             set :gisuite, fetch(:gisuite, nil)
@@ -72,16 +90,16 @@ module Capistrano
 
             puts "* * * Sending Data to Google Analytics * * *"
 
-            jira_project_code = gi_config["jira_project_code"]
+            jira_project_code = fetch(:jira_project_code)
 
             log = capture(
               "cd #{current_path} && git log #{previous_revision[0,7]}..#{current_revision[0,7]} --format=\"%s\" | grep -oh '#{jira_project_code}-[0-9]\\+' | sort | uniq"
             )
-            
+
             options = { 
               :ga_property => fetch(:ga_property),
-              :ga_custom_1 => gi_config["ga_custom_1"],
-              :ga_custom_2 => gi_config["ga_custom_2"],
+              :ga_custom_1 => fetch(:ga_custom_1),
+              :ga_custom_2 => fetch(:ga_custom_2),
               :domain => fetch(:domain), 
               :current_revision => fetch(:current_revision),
               :previous_revision => fetch(:previous_revision),
