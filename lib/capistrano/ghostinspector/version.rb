@@ -1,5 +1,5 @@
 module Capistrano
   module Ghostinspector
-    VERSION = "0.3.0.beta"
+    VERSION = "0.3.0"
   end
 end
