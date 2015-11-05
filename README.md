@@ -115,3 +115,10 @@ Run a multiple suites when deploying to staging -
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+## Credits
+
+Steven Richardson - https://twitter.com/troongizmo
+Bhalin Ramabhadran - https://twitter.com/BhalinR
+Grant Kemp - https://twitter.com/ukandroid
+
