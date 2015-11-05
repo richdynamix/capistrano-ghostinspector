@@ -118,7 +118,6 @@ Run a multiple suites when deploying to staging -
 
 ## Credits
 
-Steven Richardson - https://twitter.com/troongizmo
-Bhalin Ramabhadran - https://twitter.com/BhalinR
-Grant Kemp - https://twitter.com/ukandroid
-
+* Bhalin Ramabhadran - https://twitter.com/BhalinR
+* Grant Kemp - https://twitter.com/ukandroid
+* Steven Richardson - https://twitter.com/troongizmo
