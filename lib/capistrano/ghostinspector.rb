@@ -45,6 +45,10 @@ module Capistrano
             set :gitest, fetch(:gitest, nil)
             set :gisuite, fetch(:gisuite, nil)
 
+            # Get any default tests that have been set on the stage
+            set :gi_default_test, fetch(:gi_default_test, nil)
+            set :gi_default_suite, fetch(:gi_default_suite, nil)
+
             # Check if GI is enabled for this deployment (Default: true)
             set :gi_enabled, fetch(:gi_enabled, gi_config['gi_enabled'])
 
@@ -61,7 +65,7 @@ module Capistrano
               
               @collection = Array.new
               # run each test
-              Capistrano::Ghostinspector.getTests(fetch(:gitest), gi_config["tests"]).each do |test|
+              Capistrano::Ghostinspector.getTests(fetch(:gitest), gi_config["tests"], fetch(:gi_default_test)).each do |test|
                 puts "* * * Running Ghost Inspector Test * * *"
                 set :data, giApi.executeApi("tests", test)
 
@@ -70,7 +74,7 @@ module Capistrano
               end
 
               # run each suite
-              Capistrano::Ghostinspector.getTests(fetch(:gisuite), gi_config["suites"]).each do |suite|
+              Capistrano::Ghostinspector.getTests(fetch(:gisuite), gi_config["suites"], fetch(:gi_default_suite)).each do |suite|
                 puts "* * * Running Ghost Inspector Suite * * *"
                 set :data, giApi.executeApi("suites", suite)
 

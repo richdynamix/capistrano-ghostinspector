@@ -78,6 +78,8 @@ By default the `rollback` feature is enabled, you can disabled this for all stag
 set :rollback, false
 ```
 
+## Google Analytics Tracking
+
 The Google Analytics property must be inserted into the `ga_property` in order to log deployments and errors. Simply update your YAML to include this `ga_property: "UA-XXXXXXXX-1"`. To disable the Google Analytics tracking just leave the `ga_property` as empty string i.e. `ga_property: ""` in your YAML.
 
 Since version `0.3.0`, Google Analytics now uses Custom Dimensions as outlined in the [Google Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters?hl=en#cd_ "Google Measurement Protocol") documentation. When you define a new custom dimension in Google Analytics you are given a new dimension index. Default accounts have 20 available indexes where as premium accounts have 200. The `ga_custom_1` property is used to define the custom dimension for the testname and `ga_custom_2` is used to define the Jira tickets*. If you do not set the `ga_custom_1` or `ga_custom_2` properties then the default index of `1` & `2` will be used.
@@ -108,6 +110,19 @@ Run a multiple suites when deploying to staging -
 
     $ cap staging deploy -s gisuite=aboutpage,suite2
 
+#### Run Default Tests
+
+Since version `0.4.0`you can now set your default tests/suites to run in each stage. e.g. you might want to run a certain test suite in `production` only but have other tests running in `staging`. You can now set this in your `stage.rb` file using two new flags.
+
+i.e `production.rb` might look like this -
+```ruby
+set :gi_default_suite, "home"
+```
+and your `staging.rb` file might have the following -
+```ruby
+set :gi_default_test, "blog,checkout"
+```
+As you can see the two new variables `gi_default_suite` and `gi_default_test` can also take a comma separated list to run.
 
 ## Contributing
 
