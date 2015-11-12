@@ -60,8 +60,11 @@ module Capistrano
       end
 
       def sendRequest(type, test)
+        uri = URI("https://api.ghostinspector.com/v1/#{type}/#{test}/execute/?apiKey=#{@apiKey}#{@immediate}")
 
-        uri = URI("https://api.ghostinspector.com/v1/#{type}/#{test}/execute/?apiKey=#{@apiKey}&startUrl=http://#{@domain}/#{@immediate}")
+        if (@domain != nil)
+            uri.query = [uri.query, "startUrl=http://#{@domain}/"].compact.join('&')
+        end
 
         Net::HTTP.start(uri.host, uri.port,
         :use_ssl => uri.scheme == 'https') do |http|
