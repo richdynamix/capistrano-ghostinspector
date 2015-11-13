@@ -8,7 +8,7 @@ module Capistrano
   module Ghostinspector
     def self.load_into(config)
       config.load do
-        after "deploy", "ghostinspector:setup"
+        after fetch(:ghost_after, 'deploy'), "ghostinspector:setup"
         after "ghostinspector:setup", "ghostinspector:run"
 
         gi_config = YAML::load(File.read("gi_config.yaml"))
