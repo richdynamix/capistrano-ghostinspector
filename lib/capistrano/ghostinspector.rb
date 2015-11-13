@@ -100,7 +100,7 @@ module Capistrano
           desc "Send Results to Google Analytics"
           task :sendGA, :only => { :primary => true } do
 
-            if (fetch(:gi_enabled) == true && fetch(:ga_enabled) == true)
+            if (fetch(:gi_enabled) == true && fetch(:ga_enabled) == true && fetch(:domain) != nil)
 
               puts "* * * Sending Data to Google Analytics * * *"
 
