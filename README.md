@@ -95,7 +95,7 @@ set :rollback, false
 
 ### Configure Start URL
 
-Ghost Inspector has a nice feature that allows you to dynamically alter the start URL for your test. This allows you to reuse the same tests across multiple environments. i.e `staging.mysite.com`, `uat.mysite.com`, `www.mysite.com`. For this feature to work you must have a domain set in your stage. i.e. for staging you might have
+Ghost Inspector has a nice feature that allows you to dynamically alter the start URL for your test. This allows you to reuse the same tests accross multple environments. i.e `staging.mysite.com`, `uat.mysite.com`, `www.mysite.com`. For this feature to work you must have a domain set in your stage. i.e. for staging you might have
 
 ```ruby
 set :domain, "staging.mysite.com"
@@ -166,6 +166,9 @@ As you can see the two variables `gi_default_suite` and `gi_default_test` can al
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+## Changelog
+View the changelog [here](https://github.com/richdynamix/capistrano-ghostinspector/wiki/Changelog "Changelog")
 
 ## Credits
 
