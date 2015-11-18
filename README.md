@@ -8,7 +8,9 @@
 
 
 #### Features
+- Choose which task to run after
 - Set individual tests/suites to run from command line
+- Set individual tests/suites to run from configuration on each stage
 - Exclude individual stages
 - Auto rollback to previous version on failed tests (can be disabled in config per stage)
 - Auto configure start URL to reuse tests across multiple stages
@@ -41,6 +43,18 @@ And the add the following to the top of your `deploy.rb` file
 require 'capistrano/ghostinspector'
 ```
 
+Inside your `deploy.rb` file you need to add the following to your run list -
+
+```ruby
+after "deploy", "ghostinspector:setup"
+```
+
+You can change the run order by changing `deploy` for any other task in your deployment run list. For example, you may have a task of `run_scripts` that is executed after deployment for database migration. In this case you would change the above line to -
+
+```ruby
+after "run_scripts", "ghostinspector:setup"
+```
+
 ## Configuration
 
 First thing you need to do is create your `YAML` file (`gi_config.yaml`) in the Capistrano folder with the following format -
@@ -56,6 +70,7 @@ tests:
     homepage: "XXXXXXXXXXXXXXXXXXX"
     test2: ""
     test3: ""
+ga_enabled: true
 ga_property: "UA-XXXXXXXX-X"
 ga_custom_1: 1
 ga_custom_2: 2
@@ -78,11 +93,31 @@ By default the `rollback` feature is enabled, you can disabled this for all stag
 set :rollback, false
 ```
 
+### Configure Start URL
+
+Ghost Inspector has a nice feature that allows you to dynamically alter the start URL for your test. This allows you to reuse the same tests across multiple environments. i.e `staging.mysite.com`, `uat.mysite.com`, `www.mysite.com`. For this feature to work you must have a domain set in your stage. i.e. for staging you might have
+
+```ruby
+set :domain, "staging.mysite.com"
+```
+
+and production might have 
+
+```ruby
+set :domain, "www.mysite.com"
+```
+
+_Failure to set the domain in any stage will revert the tests to be only run against the URL you defined in Ghost Inspector_
+
 ## Google Analytics Tracking
 
-The Google Analytics property must be inserted into the `ga_property` in order to log deployments and errors. Simply update your YAML to include this `ga_property: "UA-XXXXXXXX-1"`. To disable the Google Analytics tracking just leave the `ga_property` as empty string i.e. `ga_property: ""` in your YAML.
+The Google Analytics property must be inserted into the `ga_property` in order to log deployments and errors. Simply update your YAML to include this `ga_property: "UA-XXXXXXXX-1"`. The Google Analytics feature also has a `ga_enabled` flag in your YAML file which must be `true` to successfully run. To disable the Google Analytics tracking either set the `ga_enabled` to be false or your can disable Google Analytics in each stage by setting the following - 
 
-Since version `0.3.0`, Google Analytics now uses Custom Dimensions as outlined in the [Google Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters?hl=en#cd_ "Google Measurement Protocol") documentation. When you define a new custom dimension in Google Analytics you are given a new dimension index. Default accounts have 20 available indexes where as premium accounts have 200. The `ga_custom_1` property is used to define the custom dimension for the testname and `ga_custom_2` is used to define the Jira tickets*. If you do not set the `ga_custom_1` or `ga_custom_2` properties then the default index of `1` & `2` will be used.
+```ruby
+set :ga_enabled, false
+```
+
+Google Analytics uses Custom Dimensions as outlined in the [Google Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters?hl=en#cd_ "Google Measurement Protocol") documentation. When you define a new custom dimension in Google Analytics you are given a new dimension index. Default accounts have 20 available indexes where as premium accounts have 200. The `ga_custom_1` property is used to define the custom dimension for the testname and `ga_custom_2` is used to define the Jira tickets*. If you do not set the `ga_custom_1` or `ga_custom_2` properties then the default index of `1` & `2` will be used.
 
 \*_Jira tickets are extracted from the git log during the deployment. For this reason it can only track the tickets where you have correctly assigned the ticket number and identifier to the commit message. i.e._
 ```
@@ -112,7 +147,7 @@ Run a multiple suites when deploying to staging -
 
 #### Run Default Tests
 
-Since version `0.4.0`you can now set your default tests/suites to run in each stage. e.g. you might want to run a certain test suite in `production` only but have other tests running in `staging`. You can now set this in your `stage.rb` file using two new flags.
+You can set your default tests/suites to run in each stage. e.g. you might want to run a certain test suite in `production` only but have other tests running in `staging`. You can now set this in your `stage.rb` file using the two flags.
 
 i.e `production.rb` might look like this -
 ```ruby
@@ -122,7 +157,7 @@ and your `staging.rb` file might have the following -
 ```ruby
 set :gi_default_test, "blog,checkout"
 ```
-As you can see the two new variables `gi_default_suite` and `gi_default_test` can also take a comma separated list to run.
+As you can see the two variables `gi_default_suite` and `gi_default_test` can also take a comma separated list to run.
 
 ## Contributing
 

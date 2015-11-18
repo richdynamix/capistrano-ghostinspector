@@ -5,11 +5,11 @@ module Capistrano
   module Ghostinspector
     class Api
 
-      def initialize(gi_api_key, domain, rollback, ga_property)
+      def initialize(gi_api_key, domain, rollback, ga_enabled)
         @apiKey = gi_api_key
         @domain = domain
         @rollback = rollback
-        @ga_property = ga_property
+        @ga_enabled = ga_enabled
 
         # Determine if we should get results to
         # check for any failed tests
@@ -23,12 +23,12 @@ module Capistrano
         passing = true
 
         # ------ TESTING ONLY ------
-        # results = JSON.parse(File.read("gitestresults.json"))
+        results = JSON.parse(File.read("gitestresults.json"))
         # results = JSON.parse(File.read("suiteresults.json"))
         # ------ TESTING ONLY ------
 
         # # Perform the API request and get the results
-        results = sendRequest(type, test)
+        # results = sendRequest(type, test)
 
         # Check the data returned for failed tests
         if (@rollback == true)
@@ -49,7 +49,7 @@ module Capistrano
 
         # Determine if we should get results to
         # check for any failed tests
-        if (@rollback == false && @ga_property == "")
+        if (@rollback == false && @ga_enabled == false)
           immediate = "&immediate=1"
         else
           immediate = ""

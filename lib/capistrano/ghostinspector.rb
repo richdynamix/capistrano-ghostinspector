@@ -8,7 +8,6 @@ module Capistrano
   module Ghostinspector
     def self.load_into(config)
       config.load do
-        after fetch(:ghost_after, 'deploy'), "ghostinspector:setup"
         after "ghostinspector:setup", "ghostinspector:run"
 
         gi_config = YAML::load(File.read("gi_config.yaml"))
@@ -42,9 +41,9 @@ module Capistrano
             end
 
             if gi_config.has_key?("ga_enabled")
-              set :ga_enabled, gi_config["ga_enabled"]
+              set :ga_enabled, fetch(:ga_enabled, gi_config["ga_enabled"])
             else
-              set :ga_enabled, true
+              set :ga_enabled, fetch(:ga_enabled, false)
             end
 
             set :domain, fetch(:domain, nil)
@@ -69,7 +68,7 @@ module Capistrano
 
             if (fetch(:gi_enabled) == true)
 
-              giApi = Api.new(fetch(:gi_api_key), fetch(:domain), fetch(:rollback), fetch(:ga_property))
+              giApi = Api.new(fetch(:gi_api_key), fetch(:domain), fetch(:rollback), fetch(:ga_enabled))
               
               @collection = Array.new
               # run each test
