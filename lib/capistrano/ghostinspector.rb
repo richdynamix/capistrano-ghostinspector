@@ -8,7 +8,7 @@ module Capistrano
   module Ghostinspector
     def self.load_into(config)
       config.load do
-        after "deploy", "ghostinspector:setup"
+        after fetch(:ghost_after, 'deploy'), "ghostinspector:setup"
         after "ghostinspector:setup", "ghostinspector:run"
 
         gi_config = YAML::load(File.read("gi_config.yaml"))
@@ -40,6 +40,14 @@ module Capistrano
             else
               set :jira_project_code, "GHOST"
             end
+
+            if gi_config.has_key?("ga_enabled")
+              set :ga_enabled, gi_config["ga_enabled"]
+            else
+              set :ga_enabled, true
+            end
+
+            set :domain, fetch(:domain, nil)
 
             # Get tests and suites from command line
             set :gitest, fetch(:gitest, nil)
@@ -92,30 +100,34 @@ module Capistrano
           desc "Send Results to Google Analytics"
           task :sendGA, :only => { :primary => true } do
 
-            puts "* * * Sending Data to Google Analytics * * *"
+            if (fetch(:gi_enabled) == true && fetch(:ga_enabled) == true && fetch(:domain) != nil)
 
-            jira_project_code = fetch(:jira_project_code)
+              puts "* * * Sending Data to Google Analytics * * *"
 
-            log = capture(
-              "cd #{current_path} && git log #{previous_revision[0,7]}..#{current_revision[0,7]} --format=\"%s\" | grep -oh '#{jira_project_code}-[0-9]\\+' | sort | uniq"
-            )
+              jira_project_code = fetch(:jira_project_code)
 
-            options = { 
-              :ga_property => fetch(:ga_property),
-              :ga_custom_1 => fetch(:ga_custom_1),
-              :ga_custom_2 => fetch(:ga_custom_2),
-              :domain => fetch(:domain), 
-              :current_revision => fetch(:current_revision),
-              :previous_revision => fetch(:previous_revision),
-              :branch => fetch(:branch, "default"),
-              :stage => fetch(:stage),
-              :tickets => Capistrano::Ghostinspector.getTickets(log)
-            }
+              log = capture(
+                "cd #{current_path} && git log #{previous_revision[0,7]}..#{current_revision[0,7]} --format=\"%s\" | grep -oh '#{jira_project_code}-[0-9]\\+' | sort | uniq"
+              )
 
-            analytics = Analytics.new(options)
+              options = { 
+                :ga_property => fetch(:ga_property),
+                :ga_custom_1 => fetch(:ga_custom_1),
+                :ga_custom_2 => fetch(:ga_custom_2),
+                :domain => fetch(:domain), 
+                :current_revision => fetch(:current_revision),
+                :previous_revision => fetch(:previous_revision),
+                :branch => fetch(:branch, "default"),
+                :stage => fetch(:stage),
+                :tickets => Capistrano::Ghostinspector.getTickets(log)
+              }
 
-            @collection.each do |item|
-              analytics.pushData(item[:type], item[:results])
+              analytics = Analytics.new(options)
+
+              @collection.each do |item|
+                analytics.pushData(item[:type], item[:results])
+              end
+
             end
 
           end
@@ -123,22 +135,25 @@ module Capistrano
           desc "Finalise Ghost Inspector Run"
           task :finalise_run, :only => { :primary => true } do
 
-            set :passing, true
-            @collection.each do |item|
-              if item[:passing] == false
-                set :passing, false
+            if (fetch(:gi_enabled) == true)
+              set :passing, true
+              @collection.each do |item|
+                if item[:passing] == false
+                  set :passing, false
+                end
               end
-            end
 
-            # If any test fails and the stage allows rollbacks then
-            # rollback to previous version.
-            if (fetch(:passing) == false && fetch(:rollback) == true)
-              puts "* * * Ghost Inspector Failed. Rolling back * * *"
-              run_locally %{cap #{stage} deploy:rollback}
-            else
-              puts "* * * Ghost Inspector Complete. Deployment Complete * * *"
-            end
+              # If any test fails and the stage allows rollbacks then
+              # rollback to previous version.
+              if (fetch(:passing) == false && fetch(:rollback) == true)
+                puts "* * * Ghost Inspector Failed. Rolling back * * *"
+                run_locally %{cap #{stage} deploy:rollback}
+              else
+                puts "* * * Ghost Inspector Complete. Deployment Complete * * *"
+              end
 
+            end
+            
           end
 
         end
