@@ -23,12 +23,12 @@ module Capistrano
         passing = true
 
         # ------ TESTING ONLY ------
-        results = JSON.parse(File.read("gitestresults.json"))
+        # results = JSON.parse(File.read("gitestresults.json"))
         # results = JSON.parse(File.read("suiteresults.json"))
         # ------ TESTING ONLY ------
 
         # # Perform the API request and get the results
-        # results = sendRequest(type, test)
+        results = sendRequest(type, test)
 
         # Check the data returned for failed tests
         if (@rollback == true)
