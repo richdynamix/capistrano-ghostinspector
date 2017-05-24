@@ -124,6 +124,10 @@ Google Analytics uses Custom Dimensions as outlined in the [Google Measurement P
 git commit -am "GHOST-123 Add new item to the gem"
 ```
 
+## Waiting for results
+
+When both `ga_enabled` and `rollback` are set to false then the tests are executed but the results are not returned and taken in to account.
+
 ## Usage
 
 Run a particular test when deploying to staging -
