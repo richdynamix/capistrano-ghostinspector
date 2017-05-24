@@ -82,13 +82,13 @@ You can obtain your API key, suite ID and test ID from your Ghost Inspector cons
 
 Add as many suites or tests as you like, the name you give your test isn't important but you should make it easy to remember when executing the test.
 
-By default the ghost inspector execution is enabled, you can disabled this for all stages by setting `gi_enabled: false` in the `YAML` file. Alternatively you can change this on a per stage basis by setting the appropriate variable 
+By default the ghost inspector execution is enabled, you can disable this for all stages by setting `gi_enabled: false` in the `YAML` file. Alternatively you can change this on a per stage basis by setting the appropriate variable 
 ```ruby
 set :gi_enabled, false
 ``` 
 This ensures that Ghost Inspector is not automatically run when accidentally triggered via the command line.
 
-By default the `rollback` feature is enabled, you can disabled this for all stages by setting `rollback: false` in the `YAML` file. Alternatively you can change this on a per stage basis by setting the appropriate variable 
+By default the `rollback` feature is enabled, you can disable this for all stages by setting `rollback: false` in the `YAML` file. Alternatively you can change this on a per stage basis by setting the appropriate variable 
 ```ruby
 set :rollback, false
 ```
@@ -123,6 +123,10 @@ Google Analytics uses Custom Dimensions as outlined in the [Google Measurement P
 ```
 git commit -am "GHOST-123 Add new item to the gem"
 ```
+
+## Waiting for results
+
+When both `ga_enabled` and `rollback` are set to false then the tests are executed but the results are not returned and taken in to account.
 
 ## Usage
 
