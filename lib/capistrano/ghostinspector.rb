@@ -86,7 +86,11 @@ module Capistrano
                 set :data, giApi.executeApi("suites", suite)
 
                 data[1]["data"].each do |test|
-                  items = { :passing => test["passing"], :results => test, :type =>  "suites"}
+                  items = {
+                    :passing => giApi.shouldWaitForResults() ? true : test["passing"],
+                    :results => test,
+                    :type =>  "suites"
+                  }
                   @collection << items
                 end
 

@@ -43,13 +43,17 @@ module Capistrano
 
       end
 
+      def shouldWaitForResults()
+        return @rollback == false && @ga_enabled == false;
+      end
+
       private
 
       def includeResults()
 
         # Determine if we should get results to
         # check for any failed tests
-        if (@rollback == false && @ga_enabled == false)
+        if (shouldWaitForResults())
           immediate = "&immediate=1"
         else
           immediate = ""
