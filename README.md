@@ -1,5 +1,7 @@
 # Capistrano::Ghostinspector
 
+# No longer maintained
+
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/?branch=develop)
 [![Build Status](https://scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/richdynamix/capistrano-ghostinspector/build-status/develop) [![Gem Version](https://badge.fury.io/rb/capistrano-ghostinspector.svg)](https://badge.fury.io/rb/capistrano-ghostinspector)
 
