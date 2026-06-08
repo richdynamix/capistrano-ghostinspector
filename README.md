@@ -181,3 +181,15 @@ View the changelog [here](https://github.com/richdynamix/capistrano-ghostinspect
 * Bhalin Ramabhadran - https://twitter.com/BhalinR
 * Grant Kemp - https://twitter.com/ukandroid
 * Steven Richardson - https://twitter.com/troongizmo
+
+<!-- richdynamix-bio:start -->
+
+## About the author
+
+Built and maintained by [Steven Richardson](https://richdynamix.com) — CTO at Digitonic and Laravel engineer.
+
+- Site & articles: [richdynamix.com](https://richdynamix.com)
+- Laravel deep-dives: [richdynamix.com/articles](https://richdynamix.com/articles)
+- More open source: [github.com/richdynamix](https://github.com/richdynamix)
+
+<!-- richdynamix-bio:end -->
